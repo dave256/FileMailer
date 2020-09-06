@@ -8,10 +8,92 @@
 
 import SwiftUI
 
+struct CustomAlignment: AlignmentID {
+    static func defaultValue(in context: ViewDimensions) -> CGFloat {
+        return context[.leading]
+    }
+}
+
+extension HorizontalAlignment {
+    static let custom: HorizontalAlignment = HorizontalAlignment(CustomAlignment.self)
+}
+
+struct DefaultValues {
+    @UserDefaultsBacked(key: "defaultSender", defaultValue: "") static var defaultSender: String
+}
+
 struct ContentView: View {
+
+    @State private var emailSender: String = ""
+    @State private var emailSubject: String = ""
+    @State private var folder: String = ""
+    @State private var showingFolderBlankAlert = false
+
     var body: some View {
-        Text("Hello, World!")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        VStack {
+            Text("Email each address in the folder and attach the file in its folder")
+            Spacer()
+            VStack(alignment: .custom) {
+                HStack {
+                    Text("Sending address:").fixedSize().frame(width: 120, alignment: .leading)
+                    TextField("", text: $emailSender).alignmentGuide(.custom) { $0[.leading] }
+                }
+                HStack {
+                    Text("Email subject:").fixedSize().frame(width: 120, alignment: .leading)
+                    TextField("", text: $emailSubject).alignmentGuide(.custom) { $0[.leading] }
+                }
+                HStack {
+                    Text("Folder:").fixedSize().frame(width: 120, alignment: .leading)
+                    TextField("", text: $folder).alignmentGuide(.custom) { $0[.leading] }
+                }
+            }
+            .alert(isPresented: $showingFolderBlankAlert) {
+                Alert(title: Text("Folder blank"), message: Text("Must specifiy a folder contain the email addresses as folders"), dismissButton: .default(Text("Ok")))
+            }
+            Spacer()
+            Button("Send") {
+                if self.emailSender != "" {
+                    DefaultValues.defaultSender = self.emailSender
+                }
+                UserDefaults.standard.synchronize()
+
+
+                guard self.folder != "" else {
+                    self.showingFolderBlankAlert = true
+                    return
+                }
+
+                let subject = self.emailSubject != "" ? self.emailSubject : "File attached"
+                let sender = EmailSender(emailSender: self.emailSender, subject: subject, directory: self.folder)
+                sender.sendEmails()
+            }
+            Spacer()
+        }
+        .padding()
+        .frame(minWidth: 300, idealWidth: 500, maxWidth: 800, minHeight: 300, idealHeight: 600, maxHeight: 600, alignment: .center)
+        .onDrop(of: ["public.file-url"], isTargeted: nil) { (items) -> Bool in
+            guard items.count > 0 else {
+                return false
+            }
+            if let item = items.first {
+                guard item.hasItemConformingToTypeIdentifier("public.file-url") else {
+                    return false
+                }
+                item.loadItem(forTypeIdentifier: "public.file-url", options: nil) { (urlData, error) in
+                    if let urlData = urlData as? Data {
+                        if let url = URL(dataRepresentation: urlData, relativeTo: nil) {
+                            self.folder = url.path
+                        }
+                    }
+
+                }
+            }
+            return true
+        }.onAppear() {
+            if self.emailSender == "" {
+                self.emailSender = DefaultValues.defaultSender
+            }
+        }
     }
 }
 

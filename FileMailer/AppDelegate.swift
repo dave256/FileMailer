@@ -16,6 +16,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+
+        UserDefaults.standard.register(defaults: ["defaultSender" : "", "defaultSubject": ""])
+
         // Create the SwiftUI view that provides the window contents.
         let contentView = ContentView()
 

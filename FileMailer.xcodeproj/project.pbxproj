@@ -12,6 +12,8 @@
 		03C592ED2505425800EFA54B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03C592EC2505425800EFA54B /* Assets.xcassets */; };
 		03C592F02505425800EFA54B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03C592EF2505425800EFA54B /* Preview Assets.xcassets */; };
 		03C592F32505425800EFA54B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03C592F12505425800EFA54B /* Main.storyboard */; };
+		03C592FC25055DCA00EFA54B /* EmailSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C592FB25055DCA00EFA54B /* EmailSender.swift */; };
+		03C592FE250567BD00EFA54B /* UserDefaultsBackedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C592FD250567BD00EFA54B /* UserDefaultsBackedValue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +25,8 @@
 		03C592F22505425800EFA54B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		03C592F42505425800EFA54B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		03C592F52505425800EFA54B /* FileMailer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FileMailer.entitlements; sourceTree = "<group>"; };
+		03C592FB25055DCA00EFA54B /* EmailSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSender.swift; sourceTree = "<group>"; };
+		03C592FD250567BD00EFA54B /* UserDefaultsBackedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsBackedValue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +61,8 @@
 			children = (
 				03C592E82505425700EFA54B /* AppDelegate.swift */,
 				03C592EA2505425700EFA54B /* ContentView.swift */,
+				03C592FD250567BD00EFA54B /* UserDefaultsBackedValue.swift */,
+				03C592FB25055DCA00EFA54B /* EmailSender.swift */,
 				03C592EC2505425800EFA54B /* Assets.xcassets */,
 				03C592F12505425800EFA54B /* Main.storyboard */,
 				03C592F42505425800EFA54B /* Info.plist */,
@@ -147,6 +153,8 @@
 			files = (
 				03C592EB2505425700EFA54B /* ContentView.swift in Sources */,
 				03C592E92505425700EFA54B /* AppDelegate.swift in Sources */,
+				03C592FE250567BD00EFA54B /* UserDefaultsBackedValue.swift in Sources */,
+				03C592FC25055DCA00EFA54B /* EmailSender.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
