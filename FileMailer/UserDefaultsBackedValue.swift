@@ -8,6 +8,8 @@
 
 import Foundation
 
+// https://www.swiftbysundell.com/articles/property-wrappers-in-swift/
+
 // Since our property wrapper's Value type isn't optional, but
 // can still contain nil values, we'll have to introduce this
 // protocol to enable us to cast any assigned value into a type
