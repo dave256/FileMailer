@@ -34,7 +34,6 @@ struct EmailSender {
 
                                 // execute AppleScript on main queue
                                 DispatchQueue.main.sync {
-                                    self.executeScript(script)
                                     let msg = self.executeScript(script)
                                     if msg != "true" {
                                         print(emailRecipient, terminator: " ")
