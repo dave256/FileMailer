@@ -24,7 +24,10 @@ struct EmailSender {
             let fm = FileManager()
             let url = URL(fileURLWithPath: self.directory)
             if let contents = try? fm.contentsOfDirectory(at: url, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsSubdirectoryDescendants, .skipsHiddenFiles]) {
-                for content in contents {
+                let sortedContents = contents.sorted() {
+                    $0.path < $1.path
+                }
+                for content in sortedContents {
                     if let v = try? content.resourceValues(forKeys: [.isDirectoryKey]) {
                         if let isDir = v.isDirectory, isDir {
                             let directoryContents = try? fm.contentsOfDirectory(at: content, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants, .skipsPackageDescendants])
