@@ -13,6 +13,7 @@ struct EmailSender {
     var emailSender: String
     var subject: String 
     var directory: String
+    var fileExtension: String
 
 
     /// for each subdirectory in directory, attach one file and email to the email address specified by subdirectory name
@@ -30,17 +31,27 @@ struct EmailSender {
                 for content in sortedContents {
                     if let v = try? content.resourceValues(forKeys: [.isDirectoryKey]) {
                         if let isDir = v.isDirectory, isDir {
-                            let directoryContents = try? fm.contentsOfDirectory(at: content, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants, .skipsPackageDescendants])
-                            if let firstURL = directoryContents?.first {
-                                let emailRecipient = content.lastPathComponent
-                                let script = self.createAppleScript(emailSender: self.emailSender, subject: self.subject, emailRecipient: emailRecipient, fileURL: firstURL)
+                            if let directoryContents = try? fm.contentsOfDirectory(at: content, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants, .skipsPackageDescendants]) {
+                                var firstURL: URL?
 
-                                // execute AppleScript on main queue
-                                DispatchQueue.main.sync {
-                                    let msg = self.executeScript(script)
-                                    if msg != "true" {
-                                        print(emailRecipient, terminator: " ")
-                                        print(msg)
+                                if directoryContents.count > 0 {
+                                    if self.fileExtension != ""  {
+                                        firstURL = directoryContents.filter() { $0.pathExtension ==  self.fileExtension }.first
+                                    } else {
+                                        firstURL = directoryContents.first
+                                    }
+
+                                }
+                                if let url = firstURL {
+                                    let emailRecipient = content.lastPathComponent
+                                    let script = self.createAppleScript(emailSender: self.emailSender, subject: self.subject, emailRecipient: emailRecipient, fileURL: url)
+                                    // execute AppleScript on main queue
+                                    DispatchQueue.main.sync {
+                                        let msg = self.executeScript(script)
+                                        if msg != "true" {
+                                            print(emailRecipient, terminator: " ")
+                                            print(msg)
+                                        }
                                     }
                                 }
                             }

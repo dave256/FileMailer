@@ -20,18 +20,20 @@ extension HorizontalAlignment {
 
 struct DefaultValues {
     @UserDefaultsBacked(key: "defaultSender", defaultValue: "") static var defaultSender: String
+    @UserDefaultsBacked(key: "defaultExtension", defaultValue: "") static var defaultExtension: String
 }
 
 struct ContentView: View {
 
     @State private var emailSender: String = ""
     @State private var emailSubject: String = ""
+    @State private var fileExtension: String = ""
     @State private var folder: String = ""
     @State private var showingFolderBlankAlert = false
 
     var body: some View {
         VStack {
-            Text("Email each address in the folder and attach the file in its folder")
+            Text("Email each address in the folder and attach the file in its folder that matches extension")
             Spacer()
             VStack(alignment: .custom) {
                 HStack {
@@ -46,6 +48,10 @@ struct ContentView: View {
                     Text("Folder:").fixedSize().frame(width: 120, alignment: .leading)
                     TextField("", text: $folder).alignmentGuide(.custom) { $0[.leading] }
                 }
+                HStack {
+                    Text("Extension:").fixedSize().frame(width: 120, alignment: .leading)
+                    TextField("", text: $fileExtension).alignmentGuide(.custom) { $0[.leading] }
+                }
             }
             .alert(isPresented: $showingFolderBlankAlert) {
                 Alert(title: Text("Folder blank"), message: Text("Must specifiy a folder contain the email addresses as folders"), dismissButton: .default(Text("Ok")))
@@ -54,6 +60,9 @@ struct ContentView: View {
             Button("Send") {
                 if self.emailSender != "" {
                     DefaultValues.defaultSender = self.emailSender
+                }
+                if self.fileExtension != "" {
+                    DefaultValues.defaultExtension = self.fileExtension
                 }
                 UserDefaults.standard.synchronize()
 
@@ -64,7 +73,7 @@ struct ContentView: View {
                 }
 
                 let subject = self.emailSubject != "" ? self.emailSubject : "File attached"
-                let sender = EmailSender(emailSender: self.emailSender, subject: subject, directory: self.folder)
+                let sender = EmailSender(emailSender: self.emailSender, subject: subject, directory: self.folder, fileExtension: self.fileExtension)
                 sender.sendEmails()
             }
             Spacer()
@@ -92,6 +101,9 @@ struct ContentView: View {
         }.onAppear() {
             if self.emailSender == "" {
                 self.emailSender = DefaultValues.defaultSender
+            }
+            if self.fileExtension == "" {
+                self.fileExtension = DefaultValues.defaultExtension
             }
         }
     }
