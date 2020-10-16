@@ -53,6 +53,8 @@ struct EmailSender {
                                             print(msg)
                                         }
                                     }
+                                    // wait 5 seconds to give time to send before starting next message
+                                    sleep(5)
                                 }
                             }
                         }
