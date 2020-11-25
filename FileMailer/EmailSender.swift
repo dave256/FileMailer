@@ -8,6 +8,10 @@
 
 import Foundation
 
+public extension Notification.Name {
+    static let SendCompletedNotification = Notification.Name("com.dave256apps.FileMailer.SendCompletedNotification")
+}
+
 struct EmailSender {
 
     var emailSender: String
@@ -60,9 +64,10 @@ struct EmailSender {
                         }
                     }
                 }
+                // send notification that done sending emails
+                NotificationCenter.default.post(name: .SendCompletedNotification, object: nil)
             }
         }
-
     }
 
     /// create AppleScript command to email one file as an attachment

@@ -30,6 +30,11 @@ struct ContentView: View {
     @State private var fileExtension: String = ""
     @State private var folder: String = ""
     @State private var showingFolderBlankAlert = false
+    @State private var sendDisabled = false
+
+    private var sendCompletedPublisher = {
+        NotificationCenter.default.publisher(for: .SendCompletedNotification).receive(on: RunLoop.main)
+    }()
 
     var body: some View {
         VStack {
@@ -72,10 +77,14 @@ struct ContentView: View {
                     return
                 }
 
+                // disable send button until all emails send
+                sendDisabled = true
+
                 let subject = self.emailSubject != "" ? self.emailSubject : "File attached"
                 let sender = EmailSender(emailSender: self.emailSender, subject: subject, directory: self.folder, fileExtension: self.fileExtension)
                 sender.sendEmails()
             }
+            .disabled(sendDisabled)
             Spacer()
         }
         .padding()
@@ -106,6 +115,10 @@ struct ContentView: View {
                 self.fileExtension = DefaultValues.defaultExtension
             }
         }
+        // re-enable send button when receive notification that all messages sent
+        .onReceive(sendCompletedPublisher, perform: { _ in
+            sendDisabled = false
+        })
     }
 }
 
